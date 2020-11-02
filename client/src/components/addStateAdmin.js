@@ -88,7 +88,7 @@ class stateAdmin extends React.Component {
           </nav>
           <div className="container" style={{ padding: "10%" }}>
 
-            <h3 className="text-center">ADD A ADMIN</h3>
+            <h3 className="text-center">ADD A STATE ADMIN</h3>
             <br />
             <input className="form-control" placeholder="Enter Name..." onChange={(e) => { this.setState({ name: e.target.value }) }} />
             <br />
