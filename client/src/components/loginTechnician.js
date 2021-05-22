@@ -165,11 +165,11 @@ class loginTechnician extends React.Component {
           <div className="row">
             <div className="col-md-12 wrapper ">
               <div id="formContent" style={{ padding: "5%" }}>
-                <h3>TECHNICIAN'S LOGIN:</h3>
+                <h3>PHARMACIST'S LOGIN:</h3>
                 <hr />
                 <div>
                   <label>
-                    Upload Your Question :-
+                    UPLOAD PRESCRIPTION :-
                     <input type="file" onChange={this.captureFile} />
                   </label>
 

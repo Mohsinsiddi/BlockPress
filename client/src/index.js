@@ -6,19 +6,26 @@ import "./style.css";
 import logo from "./Logo.png";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import loginDoctor from "./components/loginDoctor.js";
+import logins from "./components/logins";
 import addPatient from "./components/addPatient.js";
 import addReception from "./components/addReception.js";
 import addLab from "./components/addLab.js";
 import addDoctor from "./components/addDoctor.js";
 import Admin from "./components/Admin.js";
 import superAdmin from "./components/superAdmin.js";
-import stateAdmin from "./components/addStateAdmin.js";
+import stateAdmin from "./components/addHospital.js";
 import loginTechnician from "./components/loginTechnician.js";
  import revoke from "./components/revoke.js";
  import permit from "./components/permit.js";
 import loginPatient from "./components/loginPatient.js";
 import Web3 from 'web3';
 import {Healthcare} from "./components/js/Healthcare.js"
+
+import Navbar from "./Navbar"
+import dhb from "./components/DHB";
+import addHospital from "./components/addHospital.js";
+import addPharmacy from "./components/addPharmacy";
+import MOH from "./components/superAdmin.js";
 
 class application extends React.Component {
 
@@ -70,65 +77,65 @@ class application extends React.Component {
       buffer: null,
     }
   }
-  async loginDoc (){
+  // async loginDoc (){
     
-    console.log("hi");
-    const flag = await this.state.contract.methods.verifyDoctor(this.state.account).call();
-    if (flag == true)
-      return this.props.history.push('/doctor');
-    else
-     alert('You are not a registered doctor in this platform');
-  }
-  async loginPat (){
+  //   console.log("hi");
+  //   const flag = await this.state.contract.methods.verifyDoctor(this.state.account).call();
+  //   if (flag == true)
+  //     return this.props.history.push('/doctor');
+  //   else
+  //    alert('You are not a registered doctor in this platform');
+  // }
+  // async loginPat (){
    
-    const flag = await this.state.contract.methods.verifyPatient(this.state.account).call();
-    if (flag == true)
-      return this.props.history.push('/patient');
-    else
-     alert('You are not a registered patient in this platform');
-  }
-  async loginLab (){
+  //   const flag = await this.state.contract.methods.verifyPatient(this.state.account).call();
+  //   if (flag == true)
+  //     return this.props.history.push('/patient');
+  //   else
+  //    alert('You are not a registered patient in this platform');
+  // }
+  // async loginLab (){
    
-    const flag = await this.state.contract.methods.verifyTechnician(this.state.account).call();
-    if (flag == true)
-      return this.props.history.push('/technician');
-    else
-     alert('You are not a registered lab technician in this platform');
-  }
-  async loginSuper (){
-   
-    
-    const flag = await this.state.contract.methods.verifySuper(this.state.account).call();
-    if (flag == true)
-      return this.props.history.push('/superadmin');
-    else
-     alert('You are not the super admin in this platform');
-  }
-  async loginState (){
+  //   const flag = await this.state.contract.methods.verifyTechnician(this.state.account).call();
+  //   if (flag == true)
+  //     return this.props.history.push('/technician');
+  //   else
+  //    alert('You are not a registered lab technician in this platform');
+  // }
+  // async loginSuper (){
    
     
-    const flag = await this.state.contract.methods.verifyStateAdmin(this.state.account).call();
-    if (flag == true)
-      return this.props.history.push('/stateadmin');
-    else
-     alert('You are not the registered state admin in this platform');
-  }
-  async loginAdmin (){
-    
-    const flag = await this.state.contract.methods.verifyAdmin(this.state.account).call();
-    if (flag == true)
-      return this.props.history.push('/admin');
-    else
-     alert('You are not a registered hospital admin in this platform');
-  }
-  async loginRecep (){
+  //   const flag = await this.state.contract.methods.verifySuper(this.state.account).call();
+  //   if (flag == true)
+  //     return this.props.history.push('/superadmin');
+  //   else
+  //    alert('You are not the super admin in this platform');
+  // }
+  // async loginState (){
    
-    const flag = await this.state.contract.methods.verifyReceptionist(this.state.account).call();
-    if (flag == true)
-      return this.props.history.push('/reception/addpatient');
-    else
-     alert('You are not a registered receptionist in this platform');
-  }
+    
+  //   const flag = await this.state.contract.methods.verifyStateAdmin(this.state.account).call();
+  //   if (flag == true)
+  //     return this.props.history.push('/stateadmin');
+  //   else
+  //    alert('You are not the registered state admin in this platform');
+  // }
+  // async loginAdmin (){
+    
+  //   const flag = await this.state.contract.methods.verifyAdmin(this.state.account).call();
+  //   if (flag == true)
+  //     return this.props.history.push('/admin');
+  //   else
+  //    alert('You are not a registered hospital admin in this platform');
+  // }
+  // async loginRecep (){
+   
+  //   const flag = await this.state.contract.methods.verifyReceptionist(this.state.account).call();
+  //   if (flag == true)
+  //     return this.props.history.push('/reception/addpatient');
+  //   else
+  //    alert('You are not a registered receptionist in this platform');
+  // }
   redirect = () => {
     window.location.href = 'http://localhost:5000/hss';
     // maybe can add spinner while loading
@@ -137,8 +144,11 @@ class application extends React.Component {
   render() {
     return (
       <div id ='patient' className="App">
+
+
         <div className="bg-light text-dark">
-          <nav className="navbar navbar-expand-sm bg-dark navbar-light">
+
+          {/* <nav className="navbar navbar-expand-sm bg-dark navbar-light">
             <div
               className="nav-item active"
               style={{ color: "black", fontWeight: "bolder" }}
@@ -170,7 +180,8 @@ class application extends React.Component {
                   </li>
               
             </ul>
-          </nav>
+          </nav> */}
+          <Navbar contract={this.state.contract} account={this.state.account}/>
           <div className='Header'>
             <br />
             <br />
@@ -182,16 +193,16 @@ class application extends React.Component {
             <br />
             <br />
             <header className="text-center" >
-              <h1 >ELECTRONIC HEALTH RECORD</h1>
-              <h4>A blockchain based decentralised healthcare application.</h4>
+              <h1 className="fontColor" style={{color:'rgb(136, 247, 136)'}}>BlockPress</h1>
+              <h3 className="fontColor">A Blockchain | Decentralized based Prescription Managemnet System</h3>
             </header>
+            {/* <br />
             <br />
             <br />
             <br />
-            <br />
-            <br />
+            <br /> */}
           </div>
-          <div
+          {/* <div
             className="row text-center my-5 "
             style={{ paddingBottom: "1%" }}
           >
@@ -213,7 +224,8 @@ class application extends React.Component {
             <div className="col-md-4">
               
                 <button type="button" className="btn btn-success hover-effect" onClick={()=>this.loginLab()}>
-                  LAB TECHNICIAN
+                  //  LAB TECHNICIAN 
+                  PHARMACIST
                 </button>
               
             </div>
@@ -256,8 +268,9 @@ class application extends React.Component {
              
             </div>
 
-          </div>
+          </div> */}
         </div>
+
         <div
           className="footer-clean"
           style={{
@@ -298,19 +311,21 @@ ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route exact path="/" component={application} />
-     
+      <Route exact path="/logins" component={logins} />
       <Route exact path="/doctor" component={loginDoctor} />
       <Route exact path="/patient" component={loginPatient} />
       <Route exact path="/revoke" component={revoke} />
       <Route exact path="/permit" component={permit} />
       <Route exact path="/technician" component={loginTechnician} />
-      <Route exact path="/superadmin" component={superAdmin} />
-      <Route exact path="/stateadmin" component={stateAdmin} />
+      <Route exact path="/moh" component={MOH} />
+      <Route exact path="/addHospital" component={addHospital} />
+      <Route exact path="/addPharmacy" component={addPharmacy} />
       <Route exact path="/admin" component={Admin} />
       <Route exact path="/admin/adddoctor" component={addDoctor} />
       <Route exact path="/admin/addlab" component={addLab} />
       <Route exact path="/admin/addreception" component={addReception} />
       <Route exact path="/reception/addpatient" component={addPatient} />
+      <Route exact path="/dhb" component={dhb} />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")

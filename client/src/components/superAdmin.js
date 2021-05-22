@@ -4,7 +4,7 @@ import "../style.css";
 import logo from "../../src/Logo.png"
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Employee from "./.cph/app";
-class superAdmin extends React.Component {
+class MOH extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,22 +33,22 @@ class superAdmin extends React.Component {
           </ul>
         </nav>
         <div className="container" style={{ padding: "10%" }}>
-          <h3 className="text-center">ADD A STATE ADMIN</h3>
+          <h3 className="text-center">ADD DHB ADMIN</h3>
           <br />
           <br />
             <input className="form-control" placeholder="Enter Name..." onChange={(e) => { this.setState({ name: e.target.value }) }} />
             <br />
             <br />
-            <input className="form-control" placeholder="Enter State..." onChange={(e) => { this.setState({ statename: e.target.value }) }} />
+            <input className="form-control" placeholder="Enter DHB..." onChange={(e) => { this.setState({ statename: e.target.value }) }} />
             <br />
           <Employee 
          data={{"name":this.state.name,
         "statename":this.state.statename}}
-          from ={"superAdmin"}/>
+          from ={"moh"}/>
         </div>
       </div>
     );
   }
 }
 
-export default superAdmin;
+export default MOH;

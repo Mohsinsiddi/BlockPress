@@ -9,7 +9,8 @@ class addDoctor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name:""
+      name:"",
+      licenseNum:0
     }
   }
     render() {
@@ -38,8 +39,14 @@ class addDoctor extends React.Component {
             <br />
             <input className="form-control" placeholder="Enter Name..." onChange={(e) => { this.setState({ name: e.target.value }) }} />
             <br />
+            <br />
+            <input className="form-control" placeholder="Enter Doctor's License number..." onChange={(e) => { this.setState({ licenseNum: e.target.value }) }} />
+            <br />
             <Employee 
-            data={this.state.name}
+            data={{
+              "name":this.state.name,
+              "licenseNum":this.state.licenseNum
+            }}
              from={"adminDoc"}/>
           </div>
         </div>

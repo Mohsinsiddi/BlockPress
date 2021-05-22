@@ -59,7 +59,7 @@ class Employee extends Component {
   async addPatient() {
     this.state.contract.methods.addPatient(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
       console.log("added patient");
-      window.alert('Patient added successfully')
+      window.alert('Patient added successfully to the system')
       return window.location.reload();
     })
 
@@ -67,7 +67,7 @@ class Employee extends Component {
   async addDoctor() {
     this.state.contract.methods.addDoctor(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
       console.log("added doc");
-      window.alert('Doctor added successfully')
+      window.alert('Doctor added successfully to the system')
       return window.location.reload();
     })
 
@@ -75,7 +75,7 @@ class Employee extends Component {
   async addLab() {
     this.state.contract.methods.addLab(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
       console.log("added lab");
-      window.alert('Lab added successfully')
+      window.alert('Pharmacist added successfully to the system')
       return window.location.reload();
     })
 
@@ -85,7 +85,7 @@ class Employee extends Component {
     console.log(this.props.data.name);
     this.state.contract.methods.addStateAdmin(this.state.value,this.props.data.name,this.props.data.statename).send({ from: this.state.account }).then((r) => {
       console.log("added admin");
-      window.alert('State admin added successfully')
+      window.alert('DHB added successfully to the system')
       return window.location.reload();
     })
 
@@ -94,7 +94,7 @@ class Employee extends Component {
     console.log(this.state.value);
     this.state.contract.methods.addHospitalAdmins(this.state.value,this.props.data.name,this.props.data.hospital).send({ from: this.state.account }).then((r) => {
       console.log("added admin");
-      window.alert('Admin added successfully')
+      window.alert('Hospital Admin added successfully to the system')
       return window.location.reload();
     })
 
@@ -102,7 +102,7 @@ class Employee extends Component {
   async addReceptionist() {
     this.state.contract.methods.addReceptionist(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
       console.log("added recep");
-      window.alert('Receptionist added successfully')
+      window.alert('Receptionist added successfully to the system')
       return window.location.reload();
     })
 
@@ -128,7 +128,7 @@ class Employee extends Component {
       console.log('ipfs results', result[0].hash);
       this.state.contract.methods.sendIPFS(result[0].hash, this.state.value, encryptedKey, date).send({ from: this.state.account }).then((r) => {
         console.log("Added report");
-        window.alert('You have added report successfully')
+        window.alert('You have Added Prescription successfully')
         return window.location.reload();
 
       })
@@ -266,7 +266,7 @@ class Employee extends Component {
         >
           Submit
         </button>}
-        {this.props.from === "superAdmin" && <button type='submit'
+        {this.props.from === "moh" && <button type='submit'
           onClick={() => {
             this.setState({ parab: !this.state.parab });
 
@@ -277,10 +277,14 @@ class Employee extends Component {
         >
           Submit
         </button>}
-        {this.props.from === "stateAdmin" && <button type='submit'
+        {this.props.from === "dbh" && <button type='submit'
           onClick={() => {
             this.setState({ parab: !this.state.parab });
-
+            if(this.props.data.pharmacy){
+              window.alert("This feature hasn't been enabled yet")
+              window.location.reload()
+              return
+            }
             this.addAdmin();
 
           }}
@@ -290,6 +294,7 @@ class Employee extends Component {
         </button>}
         {this.props.from === "adminDoc" && <button type='submit'
           onClick={() => {
+            console.log("Here and there")
             this.setState({ parab: !this.state.parab });
             this.addDoctor();
 

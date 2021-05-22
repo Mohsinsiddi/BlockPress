@@ -232,3 +232,21 @@ input[type=text]:placeholder {
   color: #ffffff;
   height: 750px;
 }
+
+.drop{
+  text-align: center;
+  padding: 36px 0;
+
+}
+#dropdown-basic-button{
+  font-size: 18px;
+  background-color: rgb(8, 216, 8);
+}
+#loginbtnAdmin{
+  background-color: #098b04;
+  font-size: 18px;
+}
+#loginbtnentities{
+  background-color: #04c424;
+}
+

@@ -3,19 +3,12 @@ import {  Link } from "react-router-dom";
 import "../style.css";
 import logo from "../../src/Logo.png"
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import Employee from "./.cph/app"
 
-class addLab extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name:""
-    }
-  }
+class dhb extends React.Component {
     render() {
       return (
         <div>
-          <nav className="navbar navbar-expand-sm bg-dark navbar-light">
+         <nav className="navbar navbar-expand-sm bg-dark navbar-light">
             <div
               className="nav-item active"
               style={{ color: "black", fontWeight: "bolder" }}
@@ -32,18 +25,18 @@ class addLab extends React.Component {
               </li>
             </ul>
           </nav>
-          <div className="container" style={{ padding: "10%" }}>
-            <h3 className="text-center">ADD A PHARMACIST</h3>
-            <br />
-            <input className="form-control" placeholder="Enter Name..."  onChange={(e) => { this.setState({ name: e.target.value }) }} />
-            <br />
-            <Employee
-            data={this.state.name}
-            from={"adminLab"} />
+          <div className="container" style={{ padding: "10%",marginRight:"42px" }}>
+            <Link to="/addHospital">
+              <button className="btn btn-success mx-5" onClick={null}>ADD A HOSPITAL</button>
+            </Link>
+           
+            <Link to="/addPharmacy">
+              <button className="btn btn-success mx-5" onClick={null}> ADD A PHARMACY</button>
+            </Link>
           </div>
         </div>
       );
     }
   }
-  
-export default addLab;
+
+export default dhb;

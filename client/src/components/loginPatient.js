@@ -62,7 +62,7 @@ class loginPatient extends React.Component {
         "record": details[0],
         "address": details[3],
         "name": name,
-        "role": details[2],
+        "role": details[2] === 'doctor' ? "Doctor" : "Pharmacist",
         "timestamp": details[1],
       }
       data.push(temp);
@@ -178,7 +178,7 @@ class loginPatient extends React.Component {
           <table class="table">
             <thead class="thead-dark">
               <tr>
-                <th>Records</th>
+                <th>Prescription</th>
                 <th>Address</th>
                 <th>Name</th>
                 <th>Role</th>

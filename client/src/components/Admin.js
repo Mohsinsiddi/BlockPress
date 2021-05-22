@@ -31,7 +31,7 @@ class Admin extends React.Component {
             </Link>
             <Link to="/admin/addLab">
               <button className="btn btn-success mx-4" onClick={null}>
-                ADD A LAB TECHNICIAN
+                ADD A PHARMACIST
               </button>
             </Link>
             <Link to="/admin/addReception">
