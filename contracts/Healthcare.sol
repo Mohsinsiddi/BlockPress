@@ -1,6 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-pragma solidity ^0.6.0;
-pragma experimental ABIEncoderV2;
 /**
  * @title Roles
  * @dev Library for managing addresses assigned to a Role.
@@ -51,19 +51,25 @@ contract HealthCare {
 //   Roles.Role private radiologist;
 //   Roles.Role private pathologist;
 
-  constructor() public {
+  constructor()  {
     superAdmins.add(msg.sender);
   }
  //StructureOfPatient'sRecord
   struct patientRecords{
     address patient;
     string patName;
+    string patNationality;
+    string patBirthPlace;
+    string patDOB;
+    string NHI;
     
-    
+
+
 }
 struct doctorRecords{
     address doctor;
     string docName;
+    string licenseNum;
     
     
 }
@@ -88,7 +94,7 @@ struct hospitalAdmin{
   string hospital;
 }
 
-   mapping(address=>patientRecords) patientDetails;
+   mapping(address=>patientRecords) public patientDetails;
    mapping(address=>doctorRecords) doctorDetails;
    mapping(address=>labRecords) labDetails;
    mapping(address=>receptionistRecords)recDetails;
@@ -110,6 +116,13 @@ struct hospitalAdmin{
 function hosAdminForState()external view returns(hospitalAdmin[] memory){
   return hosAdmin[msg.sender];
 }
+
+//function to add NHI by goverment department
+function addNHI(address _patient,string calldata _nhi) external {
+    patientRecords storage patient = patientDetails[_patient];
+    patient.NHI = _nhi;
+}
+
   
 //addNetworkMembers
   function addHospitalAdmins(address _newHospitalAdmin,string calldata _name, string calldata _hospital) external onlyStateAdmin(){
@@ -117,9 +130,7 @@ function hosAdminForState()external view returns(hospitalAdmin[] memory){
         hosAdminDetails[_newHospitalAdmin].hosAdmin=_newHospitalAdmin;
         hosAdminDetails[_newHospitalAdmin].name=_name;
         hosAdminDetails[_newHospitalAdmin].hospital=_hospital;
-        
          hosAdminAccounts.push(_newHospitalAdmin);
-
          hosAdmin[msg.sender].push(hosAdminDetails[_newHospitalAdmin]);
 
   }
@@ -141,18 +152,20 @@ function hosAdminForState()external view returns(hospitalAdmin[] memory){
        
   }
   
-  function addPatient(address _newPatient,string calldata name) external onlyReceptionist(){
+  function addPatient(address _newPatient,string calldata name,string calldata nationality,string calldata birthplace,string calldata dob) external onlyReceptionist(){
         patient.add(_newPatient);
         patientDetails[_newPatient].patient = _newPatient;
         patientDetails[_newPatient].patName=name;
-
-        
+        patientDetails[_newPatient].patNationality=nationality;
+        patientDetails[_newPatient].patBirthPlace=birthplace;
+        patientDetails[_newPatient].patDOB=dob;
         patientAccounts.push(_newPatient);
   }
-  function addDoctor(address _newDoctor,string calldata name) external onlyHospitalAdmins(){
+  function addDoctor(address _newDoctor,string calldata name,string calldata _licenseNum) external onlyHospitalAdmins(){
         doctor.add(_newDoctor);
         doctorDetails[_newDoctor].doctor = _newDoctor;
         doctorDetails[_newDoctor].docName = name;
+        doctorDetails[_newDoctor].licenseNum = _licenseNum;
         
 
         
@@ -181,24 +194,37 @@ function hosAdminForState()external view returns(hospitalAdmin[] memory){
 //   }
 
   //removeNetworkMembers
-//   function removeHospitalAdmins(address _oldHospitalAdmin) external onlysuperAdmin(){
-//         hospitalAdmins.remove(_oldHospitalAdmin);
-//   }
-//   function removeReceptionist(address _oldDoctor) external onlyHospitalAdmins(){
-//         receptionist.remove(_oldDoctor);
-//   }
+  function removeHospitalAdmins(address _oldHospitalAdmin) external onlysuperAdmin(){
+        hospitalAdmins.remove(_oldHospitalAdmin);
+  }
+  function removeReceptionist(address _oldDoctor) external onlyHospitalAdmins(){
+        receptionist.remove(_oldDoctor);
+  }
   
 
-//   function removePatient(address _oldPatient) external onlyReceptionist(){
-//         patient.remove(_oldPatient);
+  function removePatient(address _oldPatient) external onlyReceptionist(){
+        patient.remove(_oldPatient);
+  }
+
+  function removeDoctor(address _oldDoctor) external onlyHospitalAdmins(){
+        doctor.remove(_oldDoctor);
+  }
+  function removeLab(address _oldDoctor) external onlyHospitalAdmins(){
+        doctor.remove(_oldDoctor);
+  }
+
+//      function removePharmacist(address _oldPharmacist) external onlyHospitalAdmins(){
+//         pharmacist.remove(_oldPharmacist);
 //   }
 
-//   function removeDoctor(address _oldDoctor) external onlyHospitalAdmins(){
-//         doctor.remove(_oldDoctor);
+//   function removeRadiologist(address _oldRadiologist) external onlyHospitalAdmins(){
+//         radiologist.remove(_oldRadiologist);
 //   }
-//   function removeLab(address _oldDoctor) external onlyHospitalAdmins(){
-//         doctor.remove(_oldDoctor);
+
+//   function removePathologist(address _oldPathologist) external onlyHospitalAdmins(){
+//         pathologist.remove(_oldPathologist);
 //   }
+
   //verify network members
  function verifyPatient(address _pat) external view returns(bool){
      return patient.has(_pat);
@@ -236,17 +262,7 @@ function returnLabName(address labAdd)external view returns(string memory){
   return labDetails[labAdd].labName;
 }
 
-//   function removePharmacist(address _oldPharmacist) external onlyHospitalAdmins(){
-//         pharmacist.remove(_oldPharmacist);
-//   }
 
-//   function removeRadiologist(address _oldRadiologist) external onlyHospitalAdmins(){
-//         radiologist.remove(_oldRadiologist);
-//   }
-
-//   function removePathologist(address _oldPathologist) external onlyHospitalAdmins(){
-//         pathologist.remove(_oldPathologist);
-//   }
 
 
 //returning stateadmin details
