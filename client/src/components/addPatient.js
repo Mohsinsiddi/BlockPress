@@ -8,7 +8,10 @@ class addPatient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name:""
+      name:"",
+      nationality:"",
+      birthPlace:"",
+       dob:"",
     }
   }
     render() {
@@ -36,8 +39,22 @@ class addPatient extends React.Component {
             <br />
             <input className="form-control" placeholder="Enter Patient's Name"  onChange={(e) => { this.setState({ name: e.target.value }) }}/>
             <br />
+            <br />
+            <input className="form-control" placeholder="Enter Patient's Nationality"  onChange={(e) => { this.setState({ nationality: e.target.value }) }}/>
+            <br />
+            <br />
+            <input className="form-control" placeholder="Enter Patient's Birth Place"  onChange={(e) => { this.setState({ birthPlace: e.target.value }) }}/>
+            <br />
+            <br />
+            <input className="form-control" placeholder="Enter Patient's Date"  onChange={(e) => { this.setState({ dob: e.target.value }) }}/>
+            <br />
             <Employee 
-            data={this.state.name}
+            data={{
+              "name":this.state.name,
+               "nationality":this.state.nationality,
+               "birthPlace":this.state.birthPlace,
+               "dob":this.state.birthPlace
+            }}
              from={"recepPat"}/>
           </div>
         </div>

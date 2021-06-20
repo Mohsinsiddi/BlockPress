@@ -7,7 +7,11 @@ import './Navbar.css';
 import { IconContext } from 'react-icons';
 import Web3 from 'web3';
 import {Healthcare} from "./components/js/Healthcare.js"
+import Identicon from "identicon.js";
 import * as IoIcons from 'react-icons/io';
+import * as GiIcons from 'react-icons/gi';
+import {RiGovernmentFill,RiLoginBoxLine} from 'react-icons/ri'
+import { MdLocalPharmacy } from "react-icons/md";
 
 const web3 = new Web3(Web3.givenProvider);
 
@@ -111,31 +115,31 @@ function Navbar(props) {
             </li>
             <li className='nav-text'>
               <Link onClick={loginAdmin}>
-              <IoIcons.IoMdPeople />
+              <FaIcons.FaHospitalAlt />
                 <span>HOSPITAL</span>
               </Link>
             </li>
             <li className='nav-text'>
               <Link onClick={loginState}>
-              <IoIcons.IoMdPeople />
+              <RiGovernmentFill />
                 <span>DHBs</span>
               </Link>
             </li>
             <li className='nav-text'>
               <Link onClick={loginRecep}>
-              <IoIcons.IoMdPeople />
+              <GiIcons.GiNurseFemale />
                 <span>RECEPTIONIST</span>
               </Link>
             </li>
             <li className='nav-text'>
               <Link onClick={loginPharm}>
-              <IoIcons.IoMdPeople />
+              <MdLocalPharmacy />
                 <span>PHARMACIST</span>
               </Link>
             </li>
             <li className='nav-text'>
               <Link onClick={loginSuper}>
-               <IoIcons.IoMdPeople />
+               <RiGovernmentFill />
                 <span>MINISTRY OF HEALTH</span>
               </Link>
             </li>

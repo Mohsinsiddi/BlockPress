@@ -26,6 +26,10 @@ import dhb from "./components/DHB";
 import addHospital from "./components/addHospital.js";
 import addPharmacy from "./components/addPharmacy";
 import MOH from "./components/superAdmin.js";
+import App from "./components/exchange/App";
+import NHI from "./components/updateNHI";
+import viewPatient from "./components/viewPatientDetails";
+import FormTXt from "./components/formtxt";
 
 class application extends React.Component {
 
@@ -57,7 +61,7 @@ class application extends React.Component {
     //const networkId = await web3.eth.net.getId()
     //const networkData = Healthcare.networks[networkId]
    
-      const contract = new web3.eth.Contract(Healthcare, "0x53cd4714E2F547c980684edF545f37fa344A4A30")
+      const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b")
       this.setState({ contract })
      
 
@@ -326,6 +330,10 @@ ReactDOM.render(
       <Route exact path="/admin/addreception" component={addReception} />
       <Route exact path="/reception/addpatient" component={addPatient} />
       <Route exact path="/dhb" component={dhb} />
+      <Route exact path="/decentralizedExchange" component={App} />
+      <Route exact path="/NHIUpdateDepartment" component={NHI} />
+      <Route exact path="/viewPatientDetails" component={viewPatient} />
+      <Route exact path="/formTxt" component={FormTXt}/>
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")

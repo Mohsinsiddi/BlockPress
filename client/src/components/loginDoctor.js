@@ -42,7 +42,7 @@ class loginDoctor extends React.Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
    
-      const contract = new web3.eth.Contract(Healthcare, "0x53cd4714E2F547c980684edF545f37fa344A4A30");
+      const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b");
       this.setState({ contract })
 
     
@@ -109,6 +109,9 @@ class loginDoctor extends React.Component {
     reader.onloadend = () => {
       this.setState({ buffer: Buffer(reader.result) })
     }
+    console.log("File: ",file)
+    console.log("-----------")
+    console.log("Reader :",reader)
 
   }
   async downloadFile(hash){
@@ -173,8 +176,14 @@ class loginDoctor extends React.Component {
                 <hr />
                 <div>
                   <label>
-                    Upload Your Question :-
-                    <input type="file" onChange={this.captureFile} />
+                    Upload Prescription :-
+                    <input type="file" onChange={this.captureFile} style={{paddingLeft:'16%'}} />
+                  </label>
+                  <label>
+                    Create new Prescription:-
+                    <Link to='/formTxt'>
+                      <button className='btn btn-primary' >Create Prescription</button>
+                    </Link>
                   </label>
 
                   <br />

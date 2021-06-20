@@ -7,6 +7,7 @@ import Web3 from 'web3'
 import { Healthcare } from "./js/Healthcare";
  import { encryptKey, encryptFile, decryptKey ,decryptFile, uintToString } from "./js/encryption.js";
  import ipfs from './js/ipfs';
+import { BlockPressABI } from "./js/BlockPressToken_abi";
 const FileSaver = require('file-saver');
 
 
@@ -36,8 +37,15 @@ class loginPatient extends React.Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
    
-      const contract = new web3.eth.Contract(Healthcare, "0x53cd4714E2F547c980684edF545f37fa344A4A30")
+      const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b")
       this.setState({ contract })
+       
+      const blockPressContract = new web3.eth.Contract(BlockPressABI, "0x2a2393eF1c6C0598Ac18FED4F3c1Cc9Cff7B8CAe")
+      this.setState({ blockPressContract })
+
+      const BPTokenBalance = await this.state.blockPressContract.methods.balanceOf(this.state.account).call();
+      const BPToken = web3.utils.fromWei(BPTokenBalance, "Ether");
+      this.setState({BPTokenBalance :BPToken});
 
     const len = await this.state.contract.methods.recordPatCount().call({ from: this.state.account });
     console.log(len);
@@ -174,6 +182,9 @@ class loginPatient extends React.Component {
         </nav>
         <div className="container-fluid" style={{padding:'25px !important'}}>
           <br />
+          <div className="row ml-auto">
+                <div style={{fontWeight:"1000"}}> BlockPress Token Balance : {this.state.BPTokenBalance}</div>
+          </div>
           <br />
           <table class="table">
             <thead class="thead-dark">

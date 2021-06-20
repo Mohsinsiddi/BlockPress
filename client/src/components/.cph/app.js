@@ -37,7 +37,7 @@ class Employee extends Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
 
-    const contract = new web3.eth.Contract(Healthcare, "0x53cd4714E2F547c980684edF545f37fa344A4A30");
+    const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b");
     this.setState({ contract })
 
 
@@ -57,7 +57,7 @@ class Employee extends Component {
   }
 
   async addPatient() {
-    this.state.contract.methods.addPatient(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
+    this.state.contract.methods.addPatient(this.state.value, this.props.data.name,this.props.data.nationality,this.props.data.birthPlace,this.props.data.dob).send({ from: this.state.account }).then((r) => {
       console.log("added patient");
       window.alert('Patient added successfully to the system')
       return window.location.reload();
@@ -65,12 +65,19 @@ class Employee extends Component {
 
   }
   async addDoctor() {
-    this.state.contract.methods.addDoctor(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
+    this.state.contract.methods.addDoctor(this.state.value, this.props.data.name,this.props.data.licenseNum).send({ from: this.state.account }).then((r) => {
       console.log("added doc");
       window.alert('Doctor added successfully to the system')
       return window.location.reload();
     })
 
+  }
+  async updateNHI(){
+    this.state.contract.methods.addNHI(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
+      console.log("NHI updated");
+      window.alert('NHI for this patient updated successfully!');
+      return window.location.reload();
+    })
   }
   async addLab() {
     this.state.contract.methods.addLab(this.state.value, this.props.data).send({ from: this.state.account }).then((r) => {
@@ -106,6 +113,10 @@ class Employee extends Component {
       return window.location.reload();
     })
 
+  }
+
+  async viewPatDetails(){
+    return "Hello"
   }
 
 
@@ -317,6 +328,29 @@ class Employee extends Component {
           onClick={() => {
             this.setState({ parab: !this.state.parab });
             this.addReceptionist();
+
+          }}
+          className="btn btn-success my-2"
+        >
+          Submit
+        </button>}
+        {this.props.from === "NHI" && <button type='submit'
+          onClick={() => {
+           
+            this.setState({ parab: !this.state.parab });
+            this.updateNHI();
+
+          }}
+          className="btn btn-success my-2"
+        >
+          Submit
+        </button>}
+        {this.props.from === "viewPatDetails" && <button type='submit'
+          onClick={async () => {
+            
+            this.setState({ parab: !this.state.parab });
+            const data = await this.viewPatDetails();
+            console.log(data)
 
           }}
           className="btn btn-success my-2"

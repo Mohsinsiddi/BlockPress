@@ -2,10 +2,12 @@ import React from 'react';
 import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
+import { GiCardExchange } from "react-icons/gi";
+import {RiLoginBoxLine} from 'react-icons/ri'
 
 export const SidebarData = [
-  // {
-  //   title: 'Home',
+  //{
+  //   title: 'Patient Details',
   //   path: '/',
   //   icon: <AiIcons.AiFillHome />,
   //   cName: 'nav-text'
@@ -13,7 +15,19 @@ export const SidebarData = [
   {
     title: 'Logins',
     path: '/logins',
-    icon: <AiIcons.AiFillHome />,
+    icon: <RiLoginBoxLine/>,
+    cName: 'nav-text'
+  },  
+  {
+    title: 'BlockPress DEX',
+    path: '/decentralizedExchange',
+    icon: <GiCardExchange />,
+    cName: 'nav-text'
+  },
+  {
+    title: 'NHI Updation',
+    path: '/NHIUpdateDepartment',
+    icon: <RiLoginBoxLine />,
     cName: 'nav-text'
   },
   // {

@@ -1,6 +1,12 @@
 export const Healthcare=[
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "contract BlockPressToken",
+				"name": "blockPressTokenContract",
+				"type": "address"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -14,6 +20,11 @@ export const Healthcare=[
 			{
 				"internalType": "string",
 				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_licenseNum",
 				"type": "string"
 			}
 		],
@@ -67,12 +78,45 @@ export const Healthcare=[
 		"inputs": [
 			{
 				"internalType": "address",
+				"name": "_patient",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_nhi",
+				"type": "string"
+			}
+		],
+		"name": "addNHI",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
 				"name": "_newPatient",
 				"type": "address"
 			},
 			{
 				"internalType": "string",
 				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "nationality",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "birthplace",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "dob",
 				"type": "string"
 			}
 		],
@@ -120,6 +164,19 @@ export const Healthcare=[
 		"name": "addStateAdmin",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "blockPressToken",
+		"outputs": [
+			{
+				"internalType": "contract BlockPressToken",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -270,6 +327,50 @@ export const Healthcare=[
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "patientDetails",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "patient",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "patName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "patNationality",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "patBirthPlace",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "patDOB",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "NHI",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -526,6 +627,58 @@ export const Healthcare=[
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_oldDoctor",
+				"type": "address"
+			}
+		],
+		"name": "removeDoctor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_oldHospitalAdmin",
+				"type": "address"
+			}
+		],
+		"name": "removeHospitalAdmins",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_oldDoctor",
+				"type": "address"
+			}
+		],
+		"name": "removeLab",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_oldPatient",
+				"type": "address"
+			}
+		],
+		"name": "removePatient",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "string",
 				"name": "hash",
 				"type": "string"
@@ -537,6 +690,19 @@ export const Healthcare=[
 			}
 		],
 		"name": "removePermission",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_oldDoctor",
+				"type": "address"
+			}
+		],
+		"name": "removeReceptionist",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

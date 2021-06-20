@@ -21,7 +21,7 @@ import {Healthcare} from "./components/js/Healthcare.js"
       //const networkId = await web3.eth.net.getId()
       //const networkData = Healthcare.networks[networkId]
      
-        const contractObj = new web3.eth.Contract(Healthcare, "0x53cd4714E2F547c980684edF545f37fa344A4A30")
+        const contractObj = new web3.eth.Contract(Healthcare, "0x8EA26b313686B812e67D6565f01f54D6Bf963C3d")
         console.log(contractObj)
         return contractObj
 }
