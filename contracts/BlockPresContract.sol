@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
+
+import "./BlockPresToken.sol";
+
 
 /**
  * @title Roles
@@ -46,13 +50,16 @@ contract HealthCare {
   Roles.Role private doctor;
   Roles.Role private patient;
   Roles.Role private lab;
+  
+  BlockPresToken public blockPressToken;
 
 //   Roles.Role private pharmacist;
 //   Roles.Role private radiologist;
 //   Roles.Role private pathologist;
 
-  constructor()  {
+  constructor(BlockPresToken _blockPresToken) public  {
     superAdmins.add(msg.sender);
+    blockPressToken=_blockPresToken;
   }
  //StructureOfPatient'sRecord
   struct patientRecords{
@@ -160,6 +167,8 @@ function addNHI(address _patient,string calldata _nhi) external {
         patientDetails[_newPatient].patBirthPlace=birthplace;
         patientDetails[_newPatient].patDOB=dob;
         patientAccounts.push(_newPatient);
+        
+        blockPressToken.mint(_newPatient,5 ether);
   }
   function addDoctor(address _newDoctor,string calldata name,string calldata _licenseNum) external onlyHospitalAdmins(){
         doctor.add(_newDoctor);
@@ -381,7 +390,7 @@ mapping(address=> LDoc)  permissionLab;
            patProfile[patientAdd].role.push("lab");
          
          }
-        
+        blockPressToken.mint(patientAdd,0.5 ether);
 
 
     }
@@ -419,7 +428,7 @@ function permitOrNot(string memory hash, address user)public view returns(string
        }
         
         key[hash][user] = aeskey;
-
+         blockPressToken.mint(msg.sender,0.5 ether);
          
     }
 
@@ -444,6 +453,7 @@ function permitOrNot(string memory hash, address user)public view returns(string
           permissionLab[user].permissionPat[pos]=address(0);
            
        }
+       blockPressToken.mint(msg.sender,0.5 ether);
         
     }
     
