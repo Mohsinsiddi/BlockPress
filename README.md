@@ -1,5 +1,4 @@
-# EHR(Electronic Health Record)
-
+# BlockPress
 After cloning the Repository on your Computer:
 1. Go to the client folder and run "npm install" to install all the prerequisites and dependencies.
 2. Now run the command "npm start" in the same client directory to start the App in your default browser.
