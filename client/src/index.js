@@ -197,8 +197,11 @@ class application extends React.Component {
             <br />
             <br />
             <header className="text-center" >
-              <h1 className="fontColor" style={{color:'rgb(136, 247, 136)'}}>BlockPress</h1>
+              <h1 className="fontColor" style={{color:'rgb(136, 247, 136)'}}>BlockPres</h1>
               <h3 className="fontColor">A Blockchain | Decentralized based Prescription Managemnet System</h3>
+              <p></p>
+              <p></p>
+              <p>A system on Blockchain where patients can do their prescription managemnet very securely</p>
             </header>
             {/* <br />
             <br />
@@ -286,7 +289,7 @@ class application extends React.Component {
           <footer>
             <div className="container">
               <div className="row justify-content-center">
-                <div className="col-sm-4 col-md-3 item">
+                {/* <div className="col-sm-4 col-md-3 item">
                   <p
                     style={{
                       color: "white",
@@ -297,9 +300,9 @@ class application extends React.Component {
                     Phone : 1800 2255 00 <br />
                     E-mail: info@ehealthrecord.com
                   </p>
-                </div>
+                </div> */}
                 <p className="copyright" style={{ marginTop: "10px"}}>
-                    EHR&nbsp; ©&nbsp; All Rights reserved. 2020
+                    BlockPres&nbsp; ©&nbsp; All Rights reserved. 2020
                   </p>
               </div>
             </div>

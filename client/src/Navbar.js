@@ -122,7 +122,7 @@ function Navbar(props) {
             <li className='nav-text'>
               <Link onClick={loginState}>
               <RiGovernmentFill />
-                <span>DHBs</span>
+                <span>HEALTH-NZ</span>
               </Link>
             </li>
             <li className='nav-text'>

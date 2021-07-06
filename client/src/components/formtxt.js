@@ -50,51 +50,51 @@ class FormTXt extends React.Component {
     render() {
       return (
         <form onSubmit={this.mySubmitHandler}>
-        <h1>Welcome to BlockPress Prescription Creation Portal</h1>
-        <h2>Create Digital Prescription!</h2>
-        <p style={{fontSize:'24px',fontWeight:'600',}}>Notes:</p>
+        <h1>Welcome to BlockPres Prescription Creation Portal</h1>
+        {/* <h2>Create Digital Prescription!</h2> */}
+        <p style={{fontSize:'16px',fontWeight:'600',}}>Notes:</p>
         <input
           type='text'
           name='notes'
           id='notes'
           onChange={this.myChangeHandler}
-          style={{backgroundColor:' rgb(131, 248, 131)',width:'100%'}}
+          style={{backgroundColor:' rgb(158, 250, 158)',width:'100%',height:'12px'}}
         />
         <hr></hr>
-        <p style={{fontSize:'24px',fontWeight:'600',}}>Advices:</p>
+        <p style={{fontSize:'16px',fontWeight:'600',}}>Advices:</p>
         <input
           type='text'
           name='advices'
           id='advices'
           onChange={this.myChangeHandler}
-          style={{backgroundColor:' rgb(131, 248, 131)',width:'100%'}}
+          style={{backgroundColor:' rgb(158, 250, 158)',width:'100%',height:'12px'}}
         />
         <hr></hr>
-        <p style={{fontSize:'24px',fontWeight:'600',}}>Medicines:</p>
+        <p style={{fontSize:'16px',fontWeight:'600',}}>Medicines:</p>
         <input
           type='text'
           name='medicines'
           id='medicines'
           onChange={this.myChangeHandler}
-          style={{backgroundColor:' rgb(131, 248, 131)',width:'100%'}}
+          style={{backgroundColor:' rgb(158, 250, 158)',width:'100%',height:'12px'}}
         />
         <hr></hr>
-         <p style={{fontSize:'24px',fontWeight:'600'}}>Doses:</p>
+         <p style={{fontSize:'16px',fontWeight:'600'}}>Doses:</p>
         <input
           type='text'
           name='doses'
           id='doses'
           onChange={this.myChangeHandler}
-          style={{backgroundColor:' rgb(131, 248, 131)',width:'100%'}}
+          style={{backgroundColor:' rgb(158, 250, 158)',width:'100%',height:'12px'}}
         />
         <hr></hr>
-        <p style={{fontSize:'24px',fontWeight:'600',}}>Next Consultation Details:</p>
+        <p style={{fontSize:'16px',fontWeight:'600',}}>Next Consultation Details:</p>
         <input
           type='text'
           name='nextdates'
           id='nextdates'
           onChange={this.myChangeHandler}
-          style={{backgroundColor:' rgb(131, 248, 131)',width:'100%'}}
+          style={{backgroundColor:' rgb(158, 250, 158)',width:'100%',height:'12px'}}
         />
          <br/>
         <br/>

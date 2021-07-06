@@ -13,12 +13,6 @@ export const SidebarData = [
   //   cName: 'nav-text'
   // },
   {
-    title: 'Logins',
-    path: '/logins',
-    icon: <RiLoginBoxLine/>,
-    cName: 'nav-text'
-  },  
-  {
     title: 'BlockPress DEX',
     path: '/decentralizedExchange',
     icon: <GiCardExchange />,
