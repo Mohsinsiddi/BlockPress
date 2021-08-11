@@ -5,6 +5,8 @@ import Web3 from 'web3'
 import Navbar from './Navbar'
 import Main from './Main'
 import './App.css'
+import { EXCHANGE_ABI } from '../js/ExchangeABI'
+import { BlockPressABI } from '../js/BlockPressToken_abi'
 
 class App extends Component {
 
@@ -22,27 +24,25 @@ class App extends Component {
     const ethBalance = await web3.eth.getBalance(this.state.account)
     this.setState({ ethBalance })
 
-//     // Load Token
-//     const networkId =  await web3.eth.net.getId()
-//     const tokenData = Token.networks[networkId]
-//     if(tokenData) {
-//       const token = new web3.eth.Contract(Token.abi, tokenData.address)
-//       this.setState({ token })
-//       let tokenBalance = await token.methods.balanceOf(this.state.account).call()
-//       this.setState({ tokenBalance: tokenBalance.toString() })
-//     } else {
-//       window.alert('Token contract not deployed to detected network.')
-//     }
+    // Load Token
+    const networkID = await web3.eth.net.getId();
+    if(networkID) {
+      const token = new web3.eth.Contract(BlockPressABI, "0x2a2393eF1c6C0598Ac18FED4F3c1Cc9Cff7B8CAe")
+      this.setState({ token })
+      let tokenBalance = await token.methods.balanceOf(this.state.account).call()
+      this.setState({ tokenBalance: tokenBalance.toString() })
+    } else {
+      window.alert('Token contract not deployed to detected network.')
+    }
 
-//     // Load EthSwap
-//     const ethSwapData = EthSwap.networks[networkId]
-//     if(ethSwapData) {
-//       const ethSwap = new web3.eth.Contract(EthSwap.abi, ethSwapData.address)
-//       this.setState({ ethSwap })
-//       this.setState({swapAddress:ethSwapData.address})
-//     } else {
-//       window.alert('EthSwap contract not deployed to detected network.')
-//     }
+    // Load EthSwap
+    if(networkID == '3') {
+      const ethSwap = new web3.eth.Contract(EXCHANGE_ABI, "0x601A08774d78D34996E17F87041f1B75C5627337")
+      this.setState({ ethSwap })
+      this.setState({swapAddress:"0x601A08774d78D34996E17F87041f1B75C5627337"})
+    } else {
+      window.alert('EthSwap contract not deployed to detected network.')
+    }
 
     this.setState({ loading: false })
   }
