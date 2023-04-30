@@ -1,153 +1,179 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../style.css";
-import logo from "../../src/Logo.png"
+import logo from "../../src/Logo.png";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import Web3 from 'web3'
+import Web3 from "web3";
 import { Healthcare } from "./js/Healthcare";
- import { encryptKey, encryptFile, decryptKey ,decryptFile, uintToString } from "./js/encryption.js";
- import ipfs from './js/ipfs';
+import {
+  encryptKey,
+  encryptFile,
+  decryptKey,
+  decryptFile,
+  uintToString,
+} from "./js/encryption.js";
+import ipfs from "./js/ipfs";
 import { BlockPressABI } from "./js/BlockPressToken_abi";
-const FileSaver = require('file-saver');
-
-
+const FileSaver = require("file-saver");
 
 class loginPatient extends React.Component {
   async componentWillMount() {
-    await this.loadWeb3()
-    await this.loadBlockchainData()
+    await this.loadWeb3();
+    await this.loadBlockchainData();
   }
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      window.alert(
+        "Non-Ethereum browser detected. You should consider trying MetaMask!"
+      );
     }
   }
 
   async loadBlockchainData() {
-    const web3 = window.web3
+    const web3 = window.web3;
 
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
-   
-      const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b")
-      this.setState({ contract })
-       
-      const blockPressContract = new web3.eth.Contract(BlockPressABI, "0x2a2393eF1c6C0598Ac18FED4F3c1Cc9Cff7B8CAe")
-      this.setState({ blockPressContract })
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0] });
 
-      const BPTokenBalance = await this.state.blockPressContract.methods.balanceOf(this.state.account).call();
-      const BPToken = web3.utils.fromWei(BPTokenBalance, "Ether");
-      this.setState({BPTokenBalance :BPToken});
+    const contract = new web3.eth.Contract(
+      Healthcare,
+      "0xc5301e2Ec1FF61844166f58a2718b8C5F7E6d3Ff"
+    );
+    this.setState({ contract });
 
-    const len = await this.state.contract.methods.recordPatCount().call({ from: this.state.account });
+    const blockPressContract = new web3.eth.Contract(
+      BlockPressABI,
+      "0x2a2393eF1c6C0598Ac18FED4F3c1Cc9Cff7B8CAe"
+    );
+    this.setState({ blockPressContract });
+
+    const BPTokenBalance = await this.state.blockPressContract.methods
+      .balanceOf(this.state.account)
+      .call();
+    const BPToken = web3.utils.fromWei(BPTokenBalance, "Ether");
+    this.setState({ BPTokenBalance: BPToken });
+
+    const len = await this.state.contract.methods
+      .recordPatCount()
+      .call({ from: this.state.account });
     console.log(len);
     var i;
     var name;
     var data = [];
 
-    for (i = len-1; i >= 0; i--) {
-     
+    for (i = len - 1; i >= 0; i--) {
       var temp = {};
-      const details = await this.state.contract.methods.recordPatDetails(i).call({ from: this.state.account });
+      const details = await this.state.contract.methods
+        .recordPatDetails(i)
+        .call({ from: this.state.account });
       console.log(details);
-      if (details[2] === "doctor"){
-        name = await this.state.contract.methods.returnDocName(details[3]).call({ from: this.state.account });
+      if (details[2] === "doctor") {
+        name = await this.state.contract.methods
+          .returnDocName(details[3])
+          .call({ from: this.state.account });
+        console.log(name);
+      } else {
+        name = await this.state.contract.methods
+          .returnLabName(details[3])
+          .call({ from: this.state.account });
         console.log(name);
       }
-      else{
-        name = await this.state.contract.methods.returnLabName(details[3]).call({ from: this.state.account });
-        console.log(name)
-      }
-        temp = {
-        "record": details[0],
-        "address": details[3],
-        "name": name,
-        "role": details[2] === 'doctor' ? "Doctor" : "Pharmacist",
-        "timestamp": details[1],
-      }
+      temp = {
+        record: details[0],
+        address: details[3],
+        name: name,
+        role: details[2] === "doctor" ? "Doctor" : "Pharmacist",
+        timestamp: details[1],
+      };
       data.push(temp);
     }
     this.setState({ data: data });
- console.log(data);
+    console.log(data);
   }
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      patientHash: '',
+      patientHash: "",
       contract: null,
 
       web3: null,
 
       account: null,
 
-
       data: [],
-
-    }
+    };
   }
-  
-   async downloadFile(hash){
+
+  async downloadFile(hash) {
     console.log("download");
-    const encryptedKey = await this.state.contract.methods.retrieveKey(hash).call({ from: this.state.account });
+    const encryptedKey = await this.state.contract.methods
+      .retrieveKey(hash)
+      .call({ from: this.state.account });
     console.log(encryptedKey);
     if (encryptedKey === "") {
-      alert('not permitted for this record');
-    }
-    else {
-
+      alert("not permitted for this record");
+    } else {
       const decryptedKey = decryptKey(encryptedKey, this.state.account);
-      console.log("key",decryptedKey);
+      console.log("key", decryptedKey);
       ipfs.get(hash, function (err, files) {
         files.forEach((file) => {
-         
           const content = uintToString(file.content);
-        
+
           const decryptedfile = decryptFile(content, decryptedKey);
           // alert(decryptedfile)
-          var blob = new Blob([decryptedfile], { type: "text/plain;charset=utf-8" });
+          var blob = new Blob([decryptedfile], {
+            type: "text/plain;charset=utf-8",
+          });
           FileSaver.saveAs(blob, "doc.txt");
-
-        })
-      })
-
-
-
+        });
+      });
     }
   }
   render() {
-    const detail = this.state.data.map(x =>
+    const detail = this.state.data.map((x) => (
       <tr>
-         <td><a href={"https://ipfs.infura.io/ipfs/" + x.record} onClick={()=>this.downloadFile(x.record)} target='_blank'>{x.record}</a></td>
+        <td>
+          <a
+            href={"https://ipfs.infura.io/ipfs/" + x.record}
+            onClick={() => this.downloadFile(x.record)}
+            target="_blank"
+          >
+            {x.record}
+          </a>
+        </td>
         <td>{x.address}</td>
         <td>{x.name}</td>
         <td>{x.role}</td>
         <td>{x.timestamp}</td>
 
         <td>
-        <Link to={{
-            pathname: '/revoke',
-            state: {recRevoke: x.record}
-          }}>
+          <Link
+            to={{
+              pathname: "/revoke",
+              state: { recRevoke: x.record },
+            }}
+          >
             <button type="button" class="btn btn-danger btn-sm" onClick={null}>
               REVOKE
             </button>
           </Link>
         </td>
         <td>
-        <Link to={{
-            pathname: '/permit',
-            state: {recRevoke: x.record}
-          }}>
-            <button id='permit'
+          <Link
+            to={{
+              pathname: "/permit",
+              state: { recRevoke: x.record },
+            }}
+          >
+            <button
+              id="permit"
               type="button"
               class="btn btn-success btn-sm"
               data-toggle="modal"
@@ -159,7 +185,7 @@ class loginPatient extends React.Component {
           </Link>
         </td>
       </tr>
-    );
+    ));
 
     return (
       <div>
@@ -175,15 +201,18 @@ class loginPatient extends React.Component {
               <Link to="/">
                 <a className="nav-link" style={{ color: "white" }}>
                   HOME
-                  </a>
+                </a>
               </Link>
             </li>
           </ul>
         </nav>
-        <div className="container-fluid" style={{padding:'25px !important'}}>
+        <div className="container-fluid" style={{ padding: "25px !important" }}>
           <br />
           <div className="row ml-auto">
-                <div style={{fontWeight:"1000"}}> BlockPress Token Balance : {this.state.BPTokenBalance}</div>
+            <div style={{ fontWeight: "1000" }}>
+              {" "}
+              BlockPress Token Balance : {this.state.BPTokenBalance}
+            </div>
           </div>
           <br />
           <table class="table">
@@ -198,9 +227,7 @@ class loginPatient extends React.Component {
                 <th>Permit</th>
               </tr>
             </thead>
-            <tbody>
-              {detail}
-            </tbody>
+            <tbody>{detail}</tbody>
           </table>
         </div>
       </div>

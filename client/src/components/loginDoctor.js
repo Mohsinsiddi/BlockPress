@@ -1,154 +1,166 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../style.css";
-import logo from "../../src/Logo.png"
+import logo from "../../src/Logo.png";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Employee from "./.cph/app";
-import Web3 from 'web3';
-import {Healthcare} from "./js/Healthcare.js";
-import { encryptKey, encryptFile, decryptKey ,decryptFile, uintToString } from "./js/encryption.js";
-import ipfs from './js/ipfs';
-const FileSaver = require('file-saver');
+import Web3 from "web3";
+import { Healthcare } from "./js/Healthcare.js";
+import {
+  encryptKey,
+  encryptFile,
+  decryptKey,
+  decryptFile,
+  uintToString,
+} from "./js/encryption.js";
+import ipfs from "./js/ipfs";
+const FileSaver = require("file-saver");
 
 //change data variable
 
-
 class loginDoctor extends React.Component {
-
-
-
-
   async componentWillMount() {
-    await this.loadWeb3()
-    await this.loadBlockchainData()
+    await this.loadWeb3();
+    await this.loadBlockchainData();
   }
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      window.alert(
+        "Non-Ethereum browser detected. You should consider trying MetaMask!"
+      );
     }
   }
 
   async loadBlockchainData() {
-    const web3 = window.web3
+    const web3 = window.web3;
     // Load account
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
-   
-      const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b");
-      this.setState({ contract })
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0] });
 
-    
-    var account = await web3.eth.getAccounts()
+    const contract = new web3.eth.Contract(
+      Healthcare,
+      "0xc5301e2Ec1FF61844166f58a2718b8C5F7E6d3Ff"
+    );
+    this.setState({ contract });
+
+    var account = await web3.eth.getAccounts();
     var fromAcc = account.toString();
 
     //calling smart contract
     var data = [];
-    const len = await this.state.contract.methods.recordDocCount().call({ from: fromAcc });
+    const len = await this.state.contract.methods
+      .recordDocCount()
+      .call({ from: fromAcc });
     for (var i = len - 1; i >= 0; i--) {
-      const details = await this.state.contract.methods.recordDocDetails(i).call({ from: fromAcc });
-      const isPermit=await this.state.contract.methods.retrieveKey(details[0]).call({ from: fromAcc });
-      if(isPermit != ""){
-      var temp = {};
-      const patName = await this.state.contract.methods.returnPatName(details[2]).call({ from: fromAcc });
-      temp = { "ipfsLink": details[0], "timestamp": details[1], "patientAddress": details[2], "patientName": patName }
-      data.push(temp);
+      const details = await this.state.contract.methods
+        .recordDocDetails(i)
+        .call({ from: fromAcc });
+      const isPermit = await this.state.contract.methods
+        .retrieveKey(details[0])
+        .call({ from: fromAcc });
+      if (isPermit != "") {
+        var temp = {};
+        const patName = await this.state.contract.methods
+          .returnPatName(details[2])
+          .call({ from: fromAcc });
+        temp = {
+          ipfsLink: details[0],
+          timestamp: details[1],
+          patientAddress: details[2],
+          patientName: patName,
+        };
+        data.push(temp);
+      }
     }
-    
-   
-
-  }
     this.setState({ data: data });
     console.log(data);
 
     var pdata = [];
-    const plen = await this.state.contract.methods.recordPDocCount().call({ from: fromAcc });
+    const plen = await this.state.contract.methods
+      .recordPDocCount()
+      .call({ from: fromAcc });
     for (var i = plen - 1; i >= 0; i--) {
-      const details = await this.state.contract.methods.recordPDocDetails(i).call({ from: fromAcc });
-      const isPermit=await this.state.contract.methods.retrieveKey(details[0]).call({ from: fromAcc });
-      if(isPermit != ""){
-      var temp = {};
-      const patName = await this.state.contract.methods.returnPatName(details[1]).call({ from: fromAcc });
-      temp = { "ipfsLink": details[0], "patientAddress": details[1], "patientName": patName }
-      pdata.push(temp);
+      const details = await this.state.contract.methods
+        .recordPDocDetails(i)
+        .call({ from: fromAcc });
+      const isPermit = await this.state.contract.methods
+        .retrieveKey(details[0])
+        .call({ from: fromAcc });
+      if (isPermit != "") {
+        var temp = {};
+        const patName = await this.state.contract.methods
+          .returnPatName(details[1])
+          .call({ from: fromAcc });
+        temp = {
+          ipfsLink: details[0],
+          patientAddress: details[1],
+          patientName: patName,
+        };
+        pdata.push(temp);
       }
     }
     this.setState({ pdata: pdata });
- console.log(pdata);
-
-
+    console.log(pdata);
   }
-
 
   constructor(props) {
     super(props);
     this.state = {
       data: [],
-      pdata:[],
+      pdata: [],
       web3: null,
       contract: null,
       account: null,
       buffer: null,
-    }
+    };
   }
-
-
 
   captureFile = (event) => {
-    event.preventDefault()
-    const file = event.target.files[0]
-    const reader = new window.FileReader()
-    reader.readAsArrayBuffer(file)
+    event.preventDefault();
+    const file = event.target.files[0];
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
     reader.onloadend = () => {
-      this.setState({ buffer: Buffer(reader.result) })
-    }
-    console.log("File: ",file)
-    console.log("-----------")
-    console.log("Reader :",reader)
-
-  }
-  async downloadFile(hash){
+      this.setState({ buffer: Buffer(reader.result) });
+    };
+    console.log("File: ", file);
+    console.log("-----------");
+    console.log("Reader :", reader);
+  };
+  async downloadFile(hash) {
     console.log("download");
-    const encryptedKey = await this.state.contract.methods.retrieveKey(hash).call({ from: this.state.account });
+    const encryptedKey = await this.state.contract.methods
+      .retrieveKey(hash)
+      .call({ from: this.state.account });
     console.log(encryptedKey);
     if (encryptedKey == "") {
-      alert('Sorry, you are not permitted for this record');
-      
-    }
-    else {
-
+      alert("Sorry, you are not permitted for this record");
+    } else {
       const decryptedKey = decryptKey(encryptedKey, this.state.account);
-     
+
       ipfs.get(hash, function (err, files) {
         files.forEach((file) => {
-          
           const content = uintToString(file.content);
-         
+
           const decryptedfile = decryptFile(content, decryptedKey);
           // document.getElementById('modalReport').innerHTML = decryptedFile
           // $('#exampleModalLong').modal()
           alert(decryptedfile);
-          
+
           // var blob = new Blob([decryptedfile], { type: "text/plain;charset=utf-8" });
-          // FileSaver.saveAs(blob, "doc.txt"); 
-
-        })
-      })
-   
-
+          // FileSaver.saveAs(blob, "doc.txt");
+        });
+      });
     }
   }
 
-
   render() {
-
     return (
       <div>
         <nav className="navbar navbar-expand-sm bg-dark navbar-light">
@@ -177,27 +189,31 @@ class loginDoctor extends React.Component {
                 <div>
                   <label>
                     Upload Prescription :-
-                    <input type="file" onChange={this.captureFile} style={{paddingLeft:'16%'}} />
+                    <input
+                      type="file"
+                      onChange={this.captureFile}
+                      style={{ paddingLeft: "16%" }}
+                    />
                   </label>
                   <label>
                     Create new Prescription:-
-                    <Link to='/formTxt'>
-                      <button className='btn btn-primary' >Create Prescription</button>
+                    <Link to="/formTxt">
+                      <button className="btn btn-primary">
+                        Create Prescription
+                      </button>
                     </Link>
                   </label>
 
                   <br />
                   <br />
-                  <Employee 
-                  data={this.state.buffer}
-                  from={"doc"}/>
+                  <Employee data={this.state.buffer} from={"doc"} />
                 </div>
               </div>
             </div>
-         
+
             <div className="col-md-12 ml-auto mr-5 my-5 wrapper">
-            <h3>You have uploaded these...</h3>
-            <hr/>
+              <h3>You have uploaded these...</h3>
+              <hr />
               <table class="table">
                 <thead class="thead-dark">
                   <tr>
@@ -209,66 +225,104 @@ class loginDoctor extends React.Component {
                 </thead>
 
                 <tbody>
-                  {this.state.data.map(x =>
+                  {this.state.data.map((x) => (
                     <tr>
                       <td>{x.patientName}</td>
                       <td>{x.patientAddress}</td>
                       <td>{x.timestamp}</td>
-                      <td><a href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink} className="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong" onClick={()=>this.downloadFile(x.ipfsLink)}>{x.ipfsLink}</a></td>
-                    </tr>)}
+                      <td>
+                        <a
+                          href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink}
+                          className="btn btn-primary"
+                          data-toggle="modal"
+                          data-target="#exampleModalLong"
+                          onClick={() => this.downloadFile(x.ipfsLink)}
+                        >
+                          {x.ipfsLink}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
-            <br>
-            </br>
+            <br></br>
 
-  
-          <div className="modal fade" id="exampleModalLong" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </div>
-                <div className="modal-body-report" id="modalReport">
-                  <span id="reportContent">...</span>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-success" data-dismiss="modal">Close</button>
+            <div
+              className="modal fade"
+              id="exampleModalLong"
+              tabIndex={-1}
+              role="dialog"
+              aria-labelledby="exampleModalLongTitle"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog" role="document">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title" id="exampleModalLongTitle">
+                      Modal title
+                    </h5>
+                    <button
+                      type="button"
+                      className="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <div className="modal-body-report" id="modalReport">
+                    <span id="reportContent">...</span>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      data-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-                
+
             <div className="col-md-12 ml-auto mr-5 my-5 wrapper">
-            <h3>You can view these...</h3>
-            <hr/>
+              <h3>You can view these...</h3>
+              <hr />
               <table class="table">
                 <thead class="thead-dark">
                   <tr>
                     <th>Patient Name</th>
                     <th>Patient Address</th>
-                   
+
                     <th>IPFS link </th>
                   </tr>
                 </thead>
 
                 <tbody>
-                  {this.state.pdata.map(x =>
+                  {this.state.pdata.map((x) => (
                     <tr>
                       <td>{x.patientName}</td>
                       <td>{x.patientAddress}</td>
-                      
-                      <td><a href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink} onClick={()=>this.downloadFile(x.ipfsLink)}target='_blank'>{x.ipfsLink}</a></td>
-                    </tr>)}
+
+                      <td>
+                        <a
+                          href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink}
+                          onClick={() => this.downloadFile(x.ipfsLink)}
+                          target="_blank"
+                        >
+                          {x.ipfsLink}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
-
           </div>
-        </div></div>
+        </div>
+      </div>
     );
   }
 }

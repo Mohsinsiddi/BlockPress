@@ -1,58 +1,54 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../style.css";
-import logo from "../../src/Logo.png"
+import logo from "../../src/Logo.png";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Employee from "./.cph/app";
-import Web3 from 'web3';
+import Web3 from "web3";
 import { Healthcare } from "./js/Healthcare.js";
 //import ScrollContainer from 'react-indiana-drag-scroll'
 class addPharmacy extends React.Component {
-
   async componentWillMount() {
-    await this.loadWeb3()
-    await this.loadBlockchainData()
+    await this.loadWeb3();
+    await this.loadBlockchainData();
   }
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      window.alert(
+        "Non-Ethereum browser detected. You should consider trying MetaMask!"
+      );
     }
   }
 
   async loadBlockchainData() {
-    const web3 = window.web3
+    const web3 = window.web3;
     // Load account
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0] });
 
-    const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b");
-    this.setState({ contract })
+    const contract = new web3.eth.Contract(
+      Healthcare,
+      "0xc5301e2Ec1FF61844166f58a2718b8C5F7E6d3Ff"
+    );
+    this.setState({ contract });
 
-
-    var account = await web3.eth.getAccounts()
+    var account = await web3.eth.getAccounts();
     var fromAcc = account.toString();
 
     //calling smart contract
 
-    const details = await this.state.contract.methods.hosAdminForState().call({ from: fromAcc });
+    const details = await this.state.contract.methods
+      .hosAdminForState()
+      .call({ from: fromAcc });
 
     this.setState({ details: details });
-
-
-
   }
-
-
-
-
 
   constructor(props) {
     super(props);
@@ -63,7 +59,7 @@ class addPharmacy extends React.Component {
       web3: null,
       contract: null,
       account: null,
-    }
+    };
   }
   render() {
     return (
@@ -87,21 +83,33 @@ class addPharmacy extends React.Component {
             </ul>
           </nav>
           <div className="container" style={{ padding: "10%" }}>
-
             <h3 className="text-center">ADD PHARMACY ADMIN</h3>
             <br />
-            <input className="form-control" placeholder="Enter Name..." onChange={(e) => { this.setState({ name: e.target.value }) }} />
+            <input
+              className="form-control"
+              placeholder="Enter Name..."
+              onChange={(e) => {
+                this.setState({ name: e.target.value });
+              }}
+            />
             <br />
             <br />
-            <input className="form-control" placeholder="Enter Pharmacy Address..." onChange={(e) => { this.setState({ pharmacy: e.target.value }) }} />
+            <input
+              className="form-control"
+              placeholder="Enter Pharmacy Address..."
+              onChange={(e) => {
+                this.setState({ pharmacy: e.target.value });
+              }}
+            />
             <br />
 
             <Employee
               data={{
-                "name": this.state.name,
-                "pharmacy": this.state.pharmacy
+                name: this.state.name,
+                pharmacy: this.state.pharmacy,
               }}
-              from={"dbh"} />
+              from={"dbh"}
+            />
           </div>
         </div>
         <div className="col-md-12 ml-auto mr-5 my-5 wrapper">
@@ -111,12 +119,10 @@ class addPharmacy extends React.Component {
                 <th>Pharmacy Admin Address</th>
                 <th>Pharmacy Name</th>
                 <th>Pharmacy Address</th>
-
               </tr>
             </thead>
 
             <tbody>
-              
               {/* {this.state.details.map(x =>
                 <tr>
                   <td>{x.hosAdmin}</td>

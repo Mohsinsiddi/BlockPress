@@ -15,13 +15,13 @@ import Admin from "./components/Admin.js";
 import superAdmin from "./components/superAdmin.js";
 import stateAdmin from "./components/addHospital.js";
 import loginTechnician from "./components/loginTechnician.js";
- import revoke from "./components/revoke.js";
- import permit from "./components/permit.js";
+import revoke from "./components/revoke.js";
+import permit from "./components/permit.js";
 import loginPatient from "./components/loginPatient.js";
-import Web3 from 'web3';
-import {Healthcare} from "./components/js/Healthcare.js"
+import Web3 from "web3";
+import { Healthcare } from "./components/js/Healthcare.js";
 
-import Navbar from "./Navbar"
+import Navbar from "./Navbar";
 import dhb from "./components/DHB";
 import addHospital from "./components/addHospital.js";
 import addPharmacy from "./components/addPharmacy";
@@ -32,57 +32,55 @@ import viewPatient from "./components/viewPatientDetails";
 import FormTXt from "./components/formtxt";
 
 class application extends React.Component {
-
   async componentWillMount() {
     console.log("in component will mount");
-    await this.loadWeb3()
-    await this.loadBlockchainData()
+    await this.loadWeb3();
+    await this.loadBlockchainData();
   }
 
   async loadWeb3() {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
-    }
-    else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-    }
-    else {
-      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      window.alert(
+        "Non-Ethereum browser detected. You should consider trying MetaMask!"
+      );
     }
     console.log("inweb3");
   }
 
   async loadBlockchainData() {
-    const web3 = window.web3
+    const web3 = window.web3;
     // Load account
-    const accounts = await web3.eth.getAccounts()
-    this.setState({ account: accounts[0] })
+    const accounts = await web3.eth.getAccounts();
+    this.setState({ account: accounts[0] });
     //const networkId = await web3.eth.net.getId()
     //const networkData = Healthcare.networks[networkId]
-   
-      const contract = new web3.eth.Contract(Healthcare, "0x5f6AFc499b79b97ad5c84CB2A315db16B5304B1b")
-      this.setState({ contract })
-     
 
-   
-    var account = await web3.eth.getAccounts()
+    const contract = new web3.eth.Contract(
+      Healthcare,
+      "0xc5301e2Ec1FF61844166f58a2718b8C5F7E6d3Ff"
+    );
+    this.setState({ contract });
+
+    var account = await web3.eth.getAccounts();
     var fromAcc = account.toString();
-   
   }
 
   constructor(props) {
     super(props);
     this.state = {
-     
       web3: null,
       contract: null,
       account: null,
       buffer: null,
-    }
+    };
   }
   // async loginDoc (){
-    
+
   //   console.log("hi");
   //   const flag = await this.state.contract.methods.verifyDoctor(this.state.account).call();
   //   if (flag == true)
@@ -91,7 +89,7 @@ class application extends React.Component {
   //    alert('You are not a registered doctor in this platform');
   // }
   // async loginPat (){
-   
+
   //   const flag = await this.state.contract.methods.verifyPatient(this.state.account).call();
   //   if (flag == true)
   //     return this.props.history.push('/patient');
@@ -99,7 +97,7 @@ class application extends React.Component {
   //    alert('You are not a registered patient in this platform');
   // }
   // async loginLab (){
-   
+
   //   const flag = await this.state.contract.methods.verifyTechnician(this.state.account).call();
   //   if (flag == true)
   //     return this.props.history.push('/technician');
@@ -107,8 +105,7 @@ class application extends React.Component {
   //    alert('You are not a registered lab technician in this platform');
   // }
   // async loginSuper (){
-   
-    
+
   //   const flag = await this.state.contract.methods.verifySuper(this.state.account).call();
   //   if (flag == true)
   //     return this.props.history.push('/superadmin');
@@ -116,8 +113,7 @@ class application extends React.Component {
   //    alert('You are not the super admin in this platform');
   // }
   // async loginState (){
-   
-    
+
   //   const flag = await this.state.contract.methods.verifyStateAdmin(this.state.account).call();
   //   if (flag == true)
   //     return this.props.history.push('/stateadmin');
@@ -125,7 +121,7 @@ class application extends React.Component {
   //    alert('You are not the registered state admin in this platform');
   // }
   // async loginAdmin (){
-    
+
   //   const flag = await this.state.contract.methods.verifyAdmin(this.state.account).call();
   //   if (flag == true)
   //     return this.props.history.push('/admin');
@@ -133,7 +129,7 @@ class application extends React.Component {
   //    alert('You are not a registered hospital admin in this platform');
   // }
   // async loginRecep (){
-   
+
   //   const flag = await this.state.contract.methods.verifyReceptionist(this.state.account).call();
   //   if (flag == true)
   //     return this.props.history.push('/reception/addpatient');
@@ -141,17 +137,14 @@ class application extends React.Component {
   //    alert('You are not a registered receptionist in this platform');
   // }
   redirect = () => {
-    window.location.href = 'http://localhost:5000/hss';
+    window.location.href = "http://localhost:5000/hss";
     // maybe can add spinner while loading
     return null;
-  }
+  };
   render() {
     return (
-      <div id ='patient' className="App">
-
-
+      <div id="patient" className="App">
         <div className="bg-light text-dark">
-
           {/* <nav className="navbar navbar-expand-sm bg-dark navbar-light">
             <div
               className="nav-item active"
@@ -185,23 +178,32 @@ class application extends React.Component {
               
             </ul>
           </nav> */}
-          <Navbar contract={this.state.contract} account={this.state.account}/>
-          <div className='Header'>
-            <br />
-            <br />
-            <br />
-            <br /><br />
+          <Navbar contract={this.state.contract} account={this.state.account} />
+          <div className="Header">
             <br />
             <br />
             <br />
             <br />
             <br />
-            <header className="text-center" >
-              <h1 className="fontColor" style={{color:'rgb(136, 247, 136)'}}>BlockPres</h1>
-              <h3 className="fontColor">A Blockchain | Decentralized based Prescription Managemnet System</h3>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <header className="text-center">
+              <h1 className="fontColor" style={{ color: "rgb(136, 247, 136)" }}>
+                BlockPres
+              </h1>
+              <h3 className="fontColor">
+                A Blockchain | Decentralized based Prescription Managemnet
+                System
+              </h3>
               <p></p>
               <p></p>
-              <p>A system on Blockchain where patients can do their prescription managemnet very securely</p>
+              <p>
+                A system on Blockchain where patients can do their prescription
+                managemnet very securely
+              </p>
             </header>
             {/* <br />
             <br />
@@ -284,8 +286,9 @@ class application extends React.Component {
             color: "white",
             backgroundColor: "#2e5666",
             fontWeight: "500",
-            padding:"5%",
-          }}>
+            padding: "5%",
+          }}
+        >
           <footer>
             <div className="container">
               <div className="row justify-content-center">
@@ -301,9 +304,9 @@ class application extends React.Component {
                     E-mail: info@ehealthrecord.com
                   </p>
                 </div> */}
-                <p className="copyright" style={{ marginTop: "10px"}}>
-                    BlockPres&nbsp; ©&nbsp; All Rights reserved. 2020
-                  </p>
+                <p className="copyright" style={{ marginTop: "10px" }}>
+                  BlockPres&nbsp; ©&nbsp; All Rights reserved. 2020
+                </p>
               </div>
             </div>
           </footer>
@@ -336,7 +339,7 @@ ReactDOM.render(
       <Route exact path="/decentralizedExchange" component={App} />
       <Route exact path="/NHIUpdateDepartment" component={NHI} />
       <Route exact path="/viewPatientDetails" component={viewPatient} />
-      <Route exact path="/formTxt" component={FormTXt}/>
+      <Route exact path="/formTxt" component={FormTXt} />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")
