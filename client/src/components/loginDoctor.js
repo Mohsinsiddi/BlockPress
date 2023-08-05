@@ -6,6 +6,7 @@ import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Employee from "./.cph/app";
 import Web3 from "web3";
 import { Healthcare } from "./js/Healthcare.js";
+import axios from "axios";
 import {
   encryptKey,
   encryptFile,
@@ -13,7 +14,6 @@ import {
   decryptFile,
   uintToString,
 } from "./js/encryption.js";
-import ipfs from "./js/ipfs";
 const FileSaver = require("file-saver");
 
 //change data variable
@@ -57,26 +57,28 @@ class loginDoctor extends React.Component {
     const len = await this.state.contract.methods
       .recordDocCount()
       .call({ from: fromAcc });
+    console.log("LEN", len);
     for (var i = len - 1; i >= 0; i--) {
       const details = await this.state.contract.methods
         .recordDocDetails(i)
         .call({ from: fromAcc });
+      console.log("Details", details);
       const isPermit = await this.state.contract.methods
         .retrieveKey(details[0])
         .call({ from: fromAcc });
-      if (isPermit != "") {
-        var temp = {};
-        const patName = await this.state.contract.methods
-          .returnPatName(details[2])
-          .call({ from: fromAcc });
-        temp = {
-          ipfsLink: details[0],
-          timestamp: details[1],
-          patientAddress: details[2],
-          patientName: patName,
-        };
-        data.push(temp);
-      }
+      console.log("isPemit", isPermit);
+
+      var temp = {};
+      const patName = await this.state.contract.methods
+        .returnPatName(details[2])
+        .call({ from: fromAcc });
+      temp = {
+        ipfsLink: details[0],
+        timestamp: details[1],
+        patientAddress: details[2],
+        patientName: patName,
+      };
+      data.push(temp);
     }
     this.setState({ data: data });
     console.log(data);
@@ -143,20 +145,18 @@ class loginDoctor extends React.Component {
       alert("Sorry, you are not permitted for this record");
     } else {
       const decryptedKey = decryptKey(encryptedKey, this.state.account);
+      console.log("key", decryptedKey);
+      const data = await axios.get(hash);
+      console.log("Data", data.data.data);
 
-      ipfs.get(hash, function (err, files) {
-        files.forEach((file) => {
-          const content = uintToString(file.content);
+      const content = uintToString(data.data.data);
 
-          const decryptedfile = decryptFile(content, decryptedKey);
-          // document.getElementById('modalReport').innerHTML = decryptedFile
-          // $('#exampleModalLong').modal()
-          alert(decryptedfile);
-
-          // var blob = new Blob([decryptedfile], { type: "text/plain;charset=utf-8" });
-          // FileSaver.saveAs(blob, "doc.txt");
-        });
+      const decryptedfile = decryptFile(content, decryptedKey);
+      // alert(decryptedfile)
+      var blob = new Blob([decryptedfile], {
+        type: "text/plain;charset=utf-8",
       });
+      FileSaver.saveAs(blob, "doc.txt");
     }
   }
 
@@ -232,7 +232,7 @@ class loginDoctor extends React.Component {
                       <td>{x.timestamp}</td>
                       <td>
                         <a
-                          href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink}
+                          href={x.ipfsLink}
                           className="btn btn-primary"
                           data-toggle="modal"
                           data-target="#exampleModalLong"
@@ -308,7 +308,7 @@ class loginDoctor extends React.Component {
 
                       <td>
                         <a
-                          href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink}
+                          href={x.ipfsLink}
                           onClick={() => this.downloadFile(x.ipfsLink)}
                           target="_blank"
                         >

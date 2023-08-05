@@ -7,6 +7,7 @@ import { Healthcare } from "../js/Healthcare.js";
 import { encryptKey, encryptFile, decryptKey } from "../js/encryption.js";
 import ipfs from "../js/ipfs";
 const cryptoRandomString = require("crypto-random-string");
+const Moralis = require("moralis").default;
 
 // import {generate} from "..js/aeskey.js"
 class Employee extends Component {
@@ -169,20 +170,31 @@ class Employee extends Component {
 
     const encryptedKey = encryptKey(this.state.value, aeskey);
     console.log("Encrypted key", encryptedKey);
-
     const buffer1 = Buffer.from(encryptedfile.toString());
-    ipfs.add(buffer1, (error, result) => {
-      console.log("ipfs results", result[0].hash);
-      this.state.contract.methods
-        .sendIPFS(result[0].hash, this.state.value, encryptedKey, date)
-        .send({ from: this.state.account })
-        .then((r) => {
-          console.log("Added report");
-          window.alert("You have Added Prescription successfully");
-          return window.location.reload();
-        });
-      if (error) console.log(error);
+    const uploadArray = [
+      {
+        path: "demo.",
+        content: buffer1,
+      },
+    ];
+    await Moralis.start({
+      apiKey:
+        "O9VEVQf2RYTUbF1NAnTifb1jYdwJVA7rhODkH5YhvtmddgJiUVUn9ONU4OwIT5J1",
     });
+
+    const response = await Moralis.EvmApi.ipfs.uploadFolder({
+      abi: uploadArray,
+    });
+    console.log(response.result[0].path);
+
+    this.state.contract.methods
+      .sendIPFS(response.result[0].path, this.state.value, encryptedKey, date)
+      .send({ from: this.state.account })
+      .then((r) => {
+        console.log("Added report");
+        window.alert("You have Added Prescription successfully");
+        return window.location.reload();
+      });
   }
 
   //revoke

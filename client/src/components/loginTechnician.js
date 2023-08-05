@@ -6,6 +6,7 @@ import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Employee from "./.cph/app";
 import Web3 from "web3";
 import { Healthcare } from "./js/Healthcare";
+import axios from "axios";
 import {
   encryptKey,
   encryptFile,
@@ -134,16 +135,16 @@ class loginTechnician extends React.Component {
     } else {
       const decryptedKey = decryptKey(encryptedKey, this.state.account);
       console.log("key", decryptedKey);
-      ipfs.get(hash, function (err, files) {
-        files.forEach((file) => {
-          const content = uintToString(file.content);
+      const data = await axios.get(hash);
 
-          const decryptedfile = decryptFile(content, decryptedKey);
-          alert(decryptedfile);
-          // var blob = new Blob([decryptedfile], { type: "text/plain;charset=utf-8" });
-          // FileSaver.saveAs(blob, "doc.txt");
-        });
+      const content = uintToString(data.data.data);
+
+      const decryptedfile = decryptFile(content, decryptedKey);
+      // alert(decryptedfile)
+      var blob = new Blob([decryptedfile], {
+        type: "text/plain;charset=utf-8",
       });
+      FileSaver.saveAs(blob, "doc.txt");
     }
   }
 
@@ -206,7 +207,7 @@ class loginTechnician extends React.Component {
                       <td>{x.timestamp}</td>
                       <td>
                         <a
-                          href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink}
+                          href={x.ipfsLink}
                           onClick={() => this.downloadFile(x.ipfsLink)}
                           target="_blank"
                         >
@@ -240,7 +241,7 @@ class loginTechnician extends React.Component {
 
                       <td>
                         <a
-                          href={"https://ipfs.infura.io/ipfs/" + x.ipfsLink}
+                          href={x.ipfsLink}
                           onClick={() => this.downloadFile(x.ipfsLink)}
                           target="_blank"
                         >

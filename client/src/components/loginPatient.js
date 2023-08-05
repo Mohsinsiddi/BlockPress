@@ -5,6 +5,7 @@ import logo from "../../src/Logo.png";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import Web3 from "web3";
 import { Healthcare } from "./js/Healthcare";
+import axios from "axios";
 import {
   encryptKey,
   encryptFile,
@@ -49,7 +50,7 @@ class loginPatient extends React.Component {
 
     const blockPressContract = new web3.eth.Contract(
       BlockPressABI,
-      "0x2a2393eF1c6C0598Ac18FED4F3c1Cc9Cff7B8CAe"
+      "0x5f2FB38ABe17d9DB84B906c021104609Db314359"
     );
     this.setState({ blockPressContract });
 
@@ -73,6 +74,11 @@ class loginPatient extends React.Component {
         .recordPatDetails(i)
         .call({ from: this.state.account });
       console.log(details);
+
+      const tokenAddress = await this.state.contract.methods
+        .blockPressToken()
+        .call({ from: this.state.account });
+      console.log("TOKEN ADDRESS", tokenAddress);
       if (details[2] === "doctor") {
         name = await this.state.contract.methods
           .returnDocName(details[3])
@@ -112,6 +118,7 @@ class loginPatient extends React.Component {
   }
 
   async downloadFile(hash) {
+    console.log("HASH", hash);
     console.log("download");
     const encryptedKey = await this.state.contract.methods
       .retrieveKey(hash)
@@ -122,18 +129,31 @@ class loginPatient extends React.Component {
     } else {
       const decryptedKey = decryptKey(encryptedKey, this.state.account);
       console.log("key", decryptedKey);
-      ipfs.get(hash, function (err, files) {
-        files.forEach((file) => {
-          const content = uintToString(file.content);
+      const data = await axios.get(hash);
+      console.log("Data", data.data.data);
 
-          const decryptedfile = decryptFile(content, decryptedKey);
-          // alert(decryptedfile)
-          var blob = new Blob([decryptedfile], {
-            type: "text/plain;charset=utf-8",
-          });
-          FileSaver.saveAs(blob, "doc.txt");
-        });
+      const content = uintToString(data.data.data);
+
+      const decryptedfile = decryptFile(content, decryptedKey);
+      // alert(decryptedfile)
+      var blob = new Blob([decryptedfile], {
+        type: "text/plain;charset=utf-8",
       });
+      FileSaver.saveAs(blob, "doc.txt");
+
+      // axios.get(`${hash}`, function (err, files) {
+      //   console.log("files", files);
+      //   files.forEach((file) => {
+      //     const content = uintToString(file.content);
+
+      //     const decryptedfile = decryptFile(content, decryptedKey);
+      //     // alert(decryptedfile)
+      //     var blob = new Blob([decryptedfile], {
+      //       type: "text/plain;charset=utf-8",
+      //     });
+      //     FileSaver.saveAs(blob, "doc.txt");
+      //   });
+      // });
     }
   }
   render() {
@@ -141,7 +161,7 @@ class loginPatient extends React.Component {
       <tr>
         <td>
           <a
-            href={"https://ipfs.infura.io/ipfs/" + x.record}
+            href={x.record}
             onClick={() => this.downloadFile(x.record)}
             target="_blank"
           >
