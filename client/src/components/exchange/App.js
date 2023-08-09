@@ -40,14 +40,14 @@ class App extends Component {
     }
 
     // Load EthSwap
-    if (networkID == "3") {
+    if (networkID === 11155111) {
       const ethSwap = new web3.eth.Contract(
         EXCHANGE_ABI,
-        "0x601A08774d78D34996E17F87041f1B75C5627337"
+        "0xd8f17732d8856d692ad31e7bd2948080e1111c74"
       );
       this.setState({ ethSwap });
       this.setState({
-        swapAddress: "0x601A08774d78D34996E17F87041f1B75C5627337",
+        swapAddress: "0xd8f17732d8856d692ad31e7bd2948080e1111c74",
       });
     } else {
       window.alert("EthSwap contract not deployed to detected network.");
@@ -75,8 +75,9 @@ class App extends Component {
     this.state.ethSwap.methods
       .buyTokens()
       .send({ value: etherAmount, from: this.state.account })
-      .on("transactionHash", (hash) => {
+      .on("receipt", (hash) => {
         this.setState({ loading: false });
+        window.alert("Successfully Bought Tokens");
       });
   };
 
@@ -85,12 +86,13 @@ class App extends Component {
     this.state.token.methods
       .approve(this.state.swapAddress, tokenAmount)
       .send({ from: this.state.account })
-      .on("transactionHash", (hash) => {
+      .on("receipt", (hash) => {
         this.state.ethSwap.methods
           .sellTokens(tokenAmount)
           .send({ from: this.state.account })
-          .on("transactionHash", (hash) => {
+          .on("receipt", (hash) => {
             this.setState({ loading: false });
+            window.alert("Successfully Sold Tokens");
           });
       });
   };
